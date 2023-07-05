@@ -22,4 +22,44 @@ struct Results : Codable {
     var vote_count : Float
     var genre_ids : [Int] = []
     
+//    init(){
+//        self.id = 0
+//        self.original_language = ""
+//        self.original_title = ""
+//        self.overview = ""
+//        self.popularity = 0
+//        self.poster_path = ""
+//        self.release_date = ""
+//        self.title = ""
+//        self.vote_average = 0
+//        self.vote_count = 0
+//        
+//        
+//    }
+}
+
+struct Movie : Codable {
+    
+    var id : Int
+    var original_title : String
+    var overview : String
+    var popularity : Float
+    var poster_path : String
+    var release_date : String
+    var title : String
+    var vote_average : Float
+//    var isFavorite : Bool? = nil
+    var toPaint : Bool? = nil
+    
+    init(){
+        self.id = 0
+        self.original_title = ""
+        self.overview = ""
+        self.popularity = 0
+        self.poster_path = ""
+        self.release_date = ""
+        self.title = ""
+        self.title = ""
+        self.vote_average = 0
+    }
 }

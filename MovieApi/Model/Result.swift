@@ -18,7 +18,7 @@ struct Result {
     init(){
         self.Correct = false
         self.ErrorMessage = ""
-        self.Objects = nil
-        self.Object = nil
+        self.Objects = []
+//        self.Object = nil
     }
 }

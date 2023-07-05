@@ -16,6 +16,9 @@ class LoginController: UIViewController {
 //           imageView.translatesAutoresizingMaskIntoConstraints=false
 //           return imageView
 //       }()
+    let login = LoginViewModel()
+    var guardarUsername : String = ""
+    var guardarPassword : String = ""
 
     
     private let Image: UIImageView = {
@@ -38,6 +41,7 @@ class LoginController: UIViewController {
            txtusuario.backgroundColor = UIColor.white
            txtusuario.layer.borderWidth = 1
            txtusuario.placeholder = "Username"
+           txtusuario.text = "JairMontes"
 
            txtusuario.translatesAutoresizingMaskIntoConstraints = false
            return txtusuario
@@ -52,10 +56,20 @@ class LoginController: UIViewController {
         txtfield.backgroundColor = UIColor.white
         txtfield.layer.borderWidth = 1
         txtfield.placeholder = "Password"
+        txtfield.text = "12345"
+      
 
            txtfield.translatesAutoresizingMaskIntoConstraints = false
            return txtfield
       }()
+    
+    var lblError : UILabel = {
+            let label = UILabel(frame: CGRect(x: 10, y: 600, width: 550, height: 30))
+            label.textColor = .red
+            label.text  = "Error"
+            label.textAlignment = .center
+            return label
+        }()
 
     private var btnIngresar : UIButton = {
             var configuration = UIButton.Configuration.filled()
@@ -66,25 +80,89 @@ class LoginController: UIViewController {
             button.tintColor = UIColor.gray
             button.setTitleColor(.white, for: .normal)
             button.configuration = configuration
-//            button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+            button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
             button.tag = 1
             button.backgroundColor = UIColor.lightGray
+       
             
             
             func action(sender:UIButton!) {
                  print("Button Clicked")
+              
               }
             
             return button
         }()
     
-    var lblError : UILabel = {
-            let label = UILabel(frame: CGRect(x: 10, y: 600, width: 550, height: 30))
-            label.textColor = .red
-            label.text  = "Error"
-            label.textAlignment = .center
-            return label
-        }()
+   
+    @objc func buttonAction(sender: UIButton!) {
+        let btnsendtag: UIButton = sender
+        if btnsendtag.tag == 1 {
+            
+           // dismiss(animated: true, completion: nil)
+            guardarUsername = self.txtUsuario.text!
+            print(guardarUsername)
+            guardarPassword = self.txtPassword.text!
+            print(guardarPassword)
+            
+            var token : String = ""
+            
+            login.RequestToken(resp: { [self]result, error in
+                        if let resultSource = result{
+                            
+                            token = resultSource.request_token!
+                          
+                            self.login.LogIn(username: guardarUsername, password: guardarPassword, requestToken: token , resp: {result, error in
+                                if let resultSource = result{
+                                    self.login.SessionId(requestToken: token, resp: {result, error in
+                                        if let resultSource = result{
+                                            
+                                            if resultSource.success == true{
+                                                let defaults = UserDefaults.standard
+                                                defaults.set(resultSource.session_id, forKey: "session_id")
+                                                
+                                                DispatchQueue.main.async {
+                                                    self.performSegue(withIdentifier: "SegueLoginDetalle", sender: self)
+                                                    
+                                                    self.txtUsuario.text = ""
+                                                    self.txtPassword.text = ""
+                                                    
+                                                    
+                                                }
+                                                
+                                            }
+                                        }
+                                        else{
+                                            if let errorSource = error{
+                                                print("Error de ID Sesion: \(errorSource.status_message)")
+                                            }
+                                        }
+                                    })
+                                }
+                                else{
+                                    if let errorSource = error{
+                                        print("Error login: \(errorSource.status_message)")
+                                        DispatchQueue.main.async {
+                                            self.lblError.isHidden = false
+                                            self.lblError.text = errorSource.status_message
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                        else{
+                            if let errorSource = error{
+                                print("Error Token: \(errorSource.status_message)")
+                            }
+                        }
+                        
+                    })
+            
+        }
+        
+    }
+    
+    
         
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -16,7 +16,9 @@ class MoviesController: UIViewController {
     var moviesTopRated : [Results] = []
     var onTv : [Results1] = []
     var airingToday : [Results1] = []
+    var moviesaguardar : [Results] = []
     var idPelicula : Int? = 0
+    var idSerie : Int? = 0
     var nombre : String = ""
     var popularity : Float = 0.0
     var original_language : String = ""
@@ -24,7 +26,15 @@ class MoviesController: UIViewController {
     var vote_average : Float = 0.0
     var vote_count : Float = 0.0
     var poster_path : String = ""
+    var IdCompania : [Int]? = []
+    var IdCompañia1 : Int? = 0
+    var accountId = 0
+    var overview = ""
+    var titulo = ""
+    var Serie = false
     var movieViewModel = MovieViewModel()
+    var favoritosviewmodel = FavoritosViewModel()
+    var acccountviewmodel = AccountViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +42,19 @@ class MoviesController: UIViewController {
         collectionMovies.register(UINib(nibName: "movieCell", bundle: .main), forCellWithReuseIdentifier: "movieCell")
         collectionMovies.delegate = self
         collectionMovies.dataSource = self
+        
+        acccountviewmodel.GetDetails(resp: {result, error in
+                    if let resultSource = result{
+                        self.accountId = resultSource.id
+                    }
+                    else{
+                        if let errorSource = error{
+                            print("Error Get Details en Get Movies: \(errorSource.status_message)")
+                        }
+                    }
+                })
+        
+        
         updateUI()
         
         Segmento.addTarget(self, action: #selector(seleccion(_:)), for: .valueChanged)
@@ -122,7 +145,6 @@ class MoviesController: UIViewController {
         }
     }
 }
-
 
 
 extension UIImageView {
@@ -218,9 +240,34 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
             cell.imagenPelicula.load(url: urlImg)
             cell.imagenPelicula.layer.cornerRadius = cell.frame.height/7
             
+            
+            
         }
+        cell.btnFavoritos.tag = indexPath.row
+        cell.btnFavoritos.addTarget(self, action: #selector(AddFavoritos(_:)), for: .touchUpInside)
         
         return cell
+    }
+    
+    @objc func AddFavoritos(_ sender: UIButton){
+        print("Me estas presionando")
+        var idMedia = 0
+                
+                if Segmento.selectedSegmentIndex == 0{
+                    idMedia = movies[sender.tag].id
+                }
+                
+                if Segmento.selectedSegmentIndex == 1{
+                    idMedia = moviesTopRated[sender.tag].id
+                }
+                
+                if Segmento.selectedSegmentIndex == 2{
+                    idMedia = onTv[sender.tag].id
+                }
+                
+                if Segmento.selectedSegmentIndex == 3{
+                    idMedia = airingToday[sender.tag].id
+                }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -233,35 +280,79 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         self.vote_average = movies[indexPath.row].vote_average
         self.vote_count = movies[indexPath.row].vote_count
         self.poster_path = movies[indexPath.row].poster_path
+        self.titulo = movies[indexPath.row].title
+        self.overview = movies[indexPath.row].overview
         print(poster_path)
+        self.IdCompania = movies[indexPath.row].genre_ids
+        self.IdCompañia1 = IdCompania![0]
            
         }
         else if Segmento.selectedSegmentIndex == 1{
             
-        self.idPelicula = movies[indexPath.row].id
-           
-        self.nombre = movies[indexPath.row].original_title
-            print(nombre)
-        self.popularity = movies[indexPath.row].popularity
-        self.original_language = movies[indexPath.row].original_language
-        self.release_date = movies[indexPath.row].release_date
-        self.vote_average = movies[indexPath.row].vote_average
-        self.vote_count = movies[indexPath.row].vote_count
-        self.poster_path = movies[indexPath.row].poster_path
+        self.idPelicula = moviesTopRated[indexPath.row].id
+        self.nombre = moviesTopRated[indexPath.row].original_title
+        print(nombre)
+        self.popularity = moviesTopRated[indexPath.row].popularity
+        self.original_language = moviesTopRated[indexPath.row].original_language
+        self.release_date = moviesTopRated[indexPath.row].release_date
+        self.vote_average = moviesTopRated[indexPath.row].vote_average
+        self.vote_count = moviesTopRated[indexPath.row].vote_count
+        self.poster_path = moviesTopRated[indexPath.row].poster_path
+        self.titulo = moviesTopRated[indexPath.row].title
+        self.overview = moviesTopRated[indexPath.row].overview
         }
+        else if Segmento.selectedSegmentIndex == 2{
+            
+        self.idSerie = onTv[indexPath.row].id
+        self.nombre = onTv[indexPath.row].name
+        self.popularity = onTv[indexPath.row].popularity
+        self.original_language = onTv[indexPath.row].original_language
+        self.release_date = onTv[indexPath.row].first_air_date
+        self.vote_average = onTv[indexPath.row].vote_average
+        self.poster_path = onTv[indexPath.row].poster_path
+        self.Serie = true
+        self.titulo = onTv[indexPath.row].name
+            self.overview = onTv[indexPath.row].overview!
+        }
+        
+        else if Segmento.selectedSegmentIndex == 3{
+            
+            self.idSerie = airingToday[indexPath.row].id
+            print(idSerie)
+        self.nombre = airingToday[indexPath.row].name
+        self.popularity = airingToday[indexPath.row].popularity
+        self.original_language = airingToday[indexPath.row].original_language
+        self.release_date = airingToday[indexPath.row].first_air_date
+        self.vote_average = airingToday[indexPath.row].vote_average
+        self.poster_path = airingToday[indexPath.row].poster_path
+        self.Serie = true
+        self.titulo = airingToday[indexPath.row].name
+            self.overview = airingToday[indexPath.row].overview!
+        }
+        
         
         self.performSegue(withIdentifier: "SegueDetalle", sender: self)
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "SegueDetalle"{
         let formControl = segue.destination as! DetalleController
-//        formControl.idPelicula = self.idPelicula!
+        formControl.idSerie = self.idSerie!
+        formControl.idPelicula = self.idPelicula!
+        print(idSerie)
         formControl.nombre = self.nombre
+        print(nombre)
         formControl.popularity = self.popularity
         formControl.original_language = self.original_language
         formControl.release_date = self.release_date
         formControl.vote_average = self.vote_average
         formControl.vote_count = self.vote_count
         formControl.poster_path = self.poster_path
+        formControl.idCompania = self.IdCompañia1
+        formControl.accountId = self.accountId
+        formControl.id = self.idPelicula!
+        formControl.titulo = self.titulo
+        formControl.overview = self.overview
+    }
     }
 }
     

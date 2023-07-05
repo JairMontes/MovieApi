@@ -7,6 +7,8 @@
 
 import Foundation
 
+private let API_KEY = "7187630fe891b4967bb148e64cb2e390"
+
 class MovieViewModel{
     
     func GetAllPopular( resp : @escaping(Root<Results>?, Error?)-> Void){
@@ -102,4 +104,31 @@ class MovieViewModel{
             }
         }.resume()
     }
+    
+    func GetDetail(_ idPelicula : Int, resp : @escaping(DetailCompanies<Companie>?, Error?)-> Void){
+           let headers = [
+               "accept": "application/json",
+           ]
+           
+           let url = URL(string: "https://api.themoviedb.org/3/movie/\(idPelicula)?api_key=\(API_KEY)")!
+           var request = URLRequest(url: url)
+           request.httpMethod = "GET"
+           request.allHTTPHeaderFields = headers
+           
+           URLSession.shared.dataTask(with: request){ data, response, error in
+               let httpResponse = response as! HTTPURLResponse
+               if 200...299 ~= httpResponse.statusCode{
+                   if let dataSource = data{
+                       let decoder = JSONDecoder()
+                       let result = try! decoder.decode(DetailCompanies<Companie>.self, from: dataSource)
+                       //let jsonString = String(data: dataSource, encoding: String.Encoding.utf8)
+                       //print(jsonString)
+                       resp(result, nil)
+                   }
+               }
+           }.resume()
+       }
+    
+    
+    
     }

@@ -68,6 +68,13 @@
                         <color key="textColor" red="0.098767753400000005" green="0.81958762890000003" blue="0.45104107609999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fag-QJ-PrA">
+                        <rect key="frame" x="110" y="13" width="69" height="54"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" red="0.71262262529999998" green="1" blue="0.76507428330000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" image="heart.fill" catalog="system"/>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" red="0.19243988241117027" green="0.19243988241117027" blue="0.19243988241117027" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 <constraints>
@@ -92,6 +99,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="btnFavoritos" destination="fag-QJ-PrA" id="rd7-AX-XEP"/>
                 <outlet property="imagenPelicula" destination="IQ8-ye-DtQ" id="7C8-2t-Fpj"/>
                 <outlet property="lblDescripcion" destination="a5o-4q-Keq" id="z9R-eo-8WT"/>
                 <outlet property="lblFecha" destination="mmr-q5-Sqz" id="Y2g-BC-g2P"/>
@@ -102,6 +110,7 @@
         </tableViewCell>
     </objects>
     <resources>
+        <image name="heart.fill" catalog="system" width="128" height="107"/>
         <image name="star.fill" catalog="system" width="128" height="116"/>
     </resources>
 </document>
