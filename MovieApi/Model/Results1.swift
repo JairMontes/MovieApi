@@ -20,3 +20,22 @@ struct Results1 : Codable {
     var vote_average : Float
     
 }
+
+struct Serie : Codable {
+    var id : Int
+    var first_air_date : String
+    var name : String
+    var overview : String
+    var poster_path : String
+    var vote_average : Float
+    var toPaint : Bool? = nil
+    
+    init(){
+        self.id = 0
+        self.first_air_date = ""
+        self.name = ""
+        self.overview = ""
+        self.poster_path = ""
+        self.vote_average = 0
+    }
+}

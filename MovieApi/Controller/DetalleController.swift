@@ -19,11 +19,12 @@ class DetalleController: UIViewController {
     @IBOutlet weak var collectionCompanies: UICollectionView!
     
     var companie : [Companie] = []
+    var dataImgMovies : [Companie] = []
     var idCompania : Int? = 0
     var id = 0
     var idPelicula : Int = 0
     var idSerie : Int? = 0
-    var Serie = false
+    var isSerie = false
     var nombre : String = ""
     var popularity : Float = 0.0
     var original_language : String = ""
@@ -38,15 +39,14 @@ class DetalleController: UIViewController {
     var movieViewModel = MovieViewModel()
     var favoritosviewmodel = FavoritosViewModel()
     var favoritesCDViewModel = FavoritosDetalleViewModel()
+    var seriesviewmodel = SerieViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         collectionCompanies.backgroundColor = .black
         
-        print(idPelicula)
-        print(idSerie)
-        print(Serie)
+        print(isSerie)
         lblNombre.text = String(nombre)
         lblPopularity.text = "Popularity: \(popularity)"
         lblOriginalLanguage.text = "Original Language: \(original_language)"
@@ -66,6 +66,35 @@ class DetalleController: UIViewController {
     
     @IBAction func btnFavoritos(_ sender: Any) {
         
+        if isSerie{
+                       
+                       favoritosviewmodel.AddFavorito(favorite: true, accountId: self.accountId, mediaId: self.id, mediaType: "tv", resp: {result, error in
+                           if let resultSource = result{
+                               print("Serie agregada a favoritos correctamente: \(resultSource.status_message)")
+                           }
+                           if let errorSource = error{
+                               print("Error al agregar serie a favoritos: \(errorSource.status_message)")
+                           }
+                       })
+                       
+                       var serie = Serie()
+                       serie.id = self.id
+                       serie.overview = self.overview
+                       serie.first_air_date = self.release_date
+                       serie.name = self.titulo
+                       serie.poster_path = self.poster_path
+                       serie.vote_average = self.vote_average
+                       let resultAddSerie = favoritesCDViewModel.AddSerie(serie)
+            if resultAddSerie.Correct!{
+                           print("Serie agregada a CoreData")
+                       }
+                       else{
+                           print("Error al agregar a CoreData \(resultAddSerie.ErrorMessage)")
+                       }
+                   }
+    
+                   else{
+       
         favoritosviewmodel.AddFavorito(favorite: true, accountId: self.accountId, mediaId: self.id, mediaType: "movie", resp: {result, error in
                             if let resultSource = result{
                                 print("Pelicula agregada a favoritos correctamente: \(resultSource.status_message)")
@@ -90,13 +119,26 @@ class DetalleController: UIViewController {
                             print("Error al agregar pelicula a CoreData \(resultAddMovie.ErrorMessage)")
                         }
                     }
-                
+    }
     
     
     
     func updateUI(){
         
-//        if Serie{
+        if isSerie {
+            seriesviewmodel.GetDetail(idSerie: self.idSerie!, resp: { result, error in
+                            if let resultSource = result{
+                                for objCompany in resultSource.production_companies{
+                                    let company = objCompany as Companie
+                                    print(objCompany)
+                                    self.companie.append(objCompany)
+                                }
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                                self.collectionCompanies.reloadData()
+                            }
+                        })
+                    }else{
             movieViewModel.GetDetail(idPelicula, resp:  { result, error in
                 if let resultSource = result{
                     for objCompany in resultSource.production_companies{
@@ -111,21 +153,7 @@ class DetalleController: UIViewController {
             }
                                            
             ) }
-//        else{
-//            movieViewModel.GetDetail(idPelicula, resp: {result, error in
-//                if let resultSource = result{
-//                    for objCompany in resultSource.production_companies{
-//                        let _ = objCompany as Companie
-//                        print(objCompany)
-//                        self.companie.append(objCompany)
-//                    }
-//                }
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
-//                    self.collectionCompanies.reloadData()
-//                }
-//            })
-//        }
-//    }
+    }
 }
 
 

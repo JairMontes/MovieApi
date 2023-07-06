@@ -19,6 +19,7 @@ class MoviesController: UIViewController {
     var moviesaguardar : [Results] = []
     var idPelicula : Int? = 0
     var idSerie : Int? = 0
+    var id = 0
     var nombre : String = ""
     var popularity : Float = 0.0
     var original_language : String = ""
@@ -33,6 +34,7 @@ class MoviesController: UIViewController {
     var titulo = ""
     var Serie = false
     var movieViewModel = MovieViewModel()
+    var serieviewmodel = SerieViewModel()
     var favoritosviewmodel = FavoritosViewModel()
     var acccountviewmodel = AccountViewModel()
     
@@ -113,7 +115,7 @@ class MoviesController: UIViewController {
             }
         }
         if sender.selectedSegmentIndex == 2{
-            movieViewModel.GetAllOnTV{ result, error in
+            serieviewmodel.GetAllOnTV{ result, error in
                 if let resultSource = result{
                     for objMovie in resultSource.results{
                         let movie = objMovie as Results1
@@ -129,7 +131,7 @@ class MoviesController: UIViewController {
             }
         }
         if sender.selectedSegmentIndex == 3{
-            movieViewModel.GetAllAiringToday{ result, error in
+            serieviewmodel.GetAllAiringToday{ result, error in
                 if let resultSource = result{
                     for objMovie in resultSource.results{
                         let movie = objMovie as Results1
@@ -243,8 +245,8 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
             
             
         }
-        cell.btnFavoritos.tag = indexPath.row
-        cell.btnFavoritos.addTarget(self, action: #selector(AddFavoritos(_:)), for: .touchUpInside)
+//        cell.btnFavoritos.tag = indexPath.row
+//        cell.btnFavoritos.addTarget(self, action: #selector(AddFavoritos(_:)), for: .touchUpInside)
         
         return cell
     }
@@ -285,6 +287,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         print(poster_path)
         self.IdCompania = movies[indexPath.row].genre_ids
         self.IdCompañia1 = IdCompania![0]
+        self.Serie = false
            
         }
         else if Segmento.selectedSegmentIndex == 1{
@@ -300,6 +303,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         self.poster_path = moviesTopRated[indexPath.row].poster_path
         self.titulo = moviesTopRated[indexPath.row].title
         self.overview = moviesTopRated[indexPath.row].overview
+        self.Serie = false
         }
         else if Segmento.selectedSegmentIndex == 2{
             
@@ -312,7 +316,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         self.poster_path = onTv[indexPath.row].poster_path
         self.Serie = true
         self.titulo = onTv[indexPath.row].name
-            self.overview = onTv[indexPath.row].overview!
+        self.overview = onTv[indexPath.row].overview!
         }
         
         else if Segmento.selectedSegmentIndex == 3{
@@ -327,7 +331,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         self.poster_path = airingToday[indexPath.row].poster_path
         self.Serie = true
         self.titulo = airingToday[indexPath.row].name
-            self.overview = airingToday[indexPath.row].overview!
+        self.overview = airingToday[indexPath.row].overview!
         }
         
         
@@ -338,9 +342,9 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         let formControl = segue.destination as! DetalleController
         formControl.idSerie = self.idSerie!
         formControl.idPelicula = self.idPelicula!
-        print(idSerie)
+        formControl.isSerie = self.Serie
+        print(Serie)
         formControl.nombre = self.nombre
-        print(nombre)
         formControl.popularity = self.popularity
         formControl.original_language = self.original_language
         formControl.release_date = self.release_date
@@ -349,7 +353,8 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         formControl.poster_path = self.poster_path
         formControl.idCompania = self.IdCompañia1
         formControl.accountId = self.accountId
-        formControl.id = self.idPelicula!
+//        formControl.id = self.idPelicula!
+        formControl.id = self.id
         formControl.titulo = self.titulo
         formControl.overview = self.overview
     }

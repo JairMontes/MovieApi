@@ -7,7 +7,8 @@
 
 import Foundation
 
-class AccountViewModel{
+class AccountViewModel {
+    
     private let API_KEY = "7187630fe891b4967bb148e64cb2e390"
     
     func GetDetails(resp : @escaping(Account?, Error?) -> Void){
