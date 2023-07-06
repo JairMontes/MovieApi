@@ -62,18 +62,38 @@ class PerfilController: UIViewController {
             if let resultSource = result{
                 for objMovie in resultSource.results{
                     let movie = objMovie as Movie
-                    //                    print(objMovie)
                     self.dataFavoriteMovies.append(objMovie)
                 }
-                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
                     self.collectionFavoritos.reloadData()
                 }
             }
         })
+    
+    favoritosviewmodel.GetFavoriteTV(resp: {result, error in
+                if let resultSource = result{
+                    for objSerie in resultSource.results{
+                        let serie = objSerie as Serie
+                        var objMovie = Movie()
+                        objMovie.id = objSerie.id
+                        objMovie.original_title = objSerie.name
+                        objMovie.overview = objSerie.overview!
+                        objMovie.popularity = objSerie.vote_average
+                        objMovie.poster_path = objSerie.poster_path
+                        objMovie.release_date = objSerie.first_air_date!
+                        objMovie.title = objSerie.name
+                        objMovie.vote_average = objSerie.vote_average
+                        self.dataFavoriteMovies.append(objMovie)
+                    }
+                }
+            })
+            
+        }
+        
+        
     }
     
-}
+
 
 extension PerfilController: UICollectionViewDelegate, UICollectionViewDataSource{
     

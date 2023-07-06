@@ -38,7 +38,7 @@ class DetalleController: UIViewController {
     let urlDefecto = "https://image.tmdb.org/t/p/w500/"
     var movieViewModel = MovieViewModel()
     var favoritosviewmodel = FavoritosViewModel()
-    var favoritesCDViewModel = FavoritosDetalleViewModel()
+    var favoritesDetalleViewModel = FavoritosDetalleViewModel()
     var seriesviewmodel = SerieViewModel()
     
     override func viewDidLoad() {
@@ -67,8 +67,8 @@ class DetalleController: UIViewController {
     @IBAction func btnFavoritos(_ sender: Any) {
         
         if isSerie{
-                       
-                       favoritosviewmodel.AddFavorito(favorite: true, accountId: self.accountId, mediaId: self.id, mediaType: "tv", resp: {result, error in
+
+            favoritosviewmodel.AddFavorito(favorite: true, accountId: self.accountId, mediaId: self.idSerie!, mediaType: "tv", resp: {result, error in
                            if let resultSource = result{
                                print("Serie agregada a favoritos correctamente: \(resultSource.status_message)")
                            }
@@ -76,23 +76,23 @@ class DetalleController: UIViewController {
                                print("Error al agregar serie a favoritos: \(errorSource.status_message)")
                            }
                        })
-                       
+
                        var serie = Serie()
-                       serie.id = self.id
+            serie.id = self.idSerie!
                        serie.overview = self.overview
                        serie.first_air_date = self.release_date
                        serie.name = self.titulo
                        serie.poster_path = self.poster_path
                        serie.vote_average = self.vote_average
-                       let resultAddSerie = favoritesCDViewModel.AddSerie(serie)
-            if resultAddSerie.Correct!{
+                       let resultAddSerie = favoritesDetalleViewModel.AddSerie(serie)
+            if resultAddSerie.Correct{
                            print("Serie agregada a CoreData")
                        }
                        else{
                            print("Error al agregar a CoreData \(resultAddSerie.ErrorMessage)")
                        }
                    }
-    
+
                    else{
        
         favoritosviewmodel.AddFavorito(favorite: true, accountId: self.accountId, mediaId: self.id, mediaType: "movie", resp: {result, error in
@@ -105,14 +105,14 @@ class DetalleController: UIViewController {
                         })
                         
                         var movie = Movie()
-                        movie.id = self.id
+                        movie.id = self.idPelicula
                         movie.overview = self.overview
                         movie.release_date = self.release_date
                         movie.title = self.titulo
                         movie.poster_path = self.poster_path
                         movie.vote_average = self.vote_average
-                        let resultAddMovie = favoritesCDViewModel.AddMovie(movie)
-        if resultAddMovie.Correct!{
+                        let resultAddMovie = favoritesDetalleViewModel.AddMovie(movie)
+        if resultAddMovie.Correct{
                             print("Pelicula agregada a CoreData")
                         }
                         else{

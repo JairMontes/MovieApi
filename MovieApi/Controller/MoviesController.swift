@@ -353,8 +353,8 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         formControl.poster_path = self.poster_path
         formControl.idCompania = self.IdCompañia1
         formControl.accountId = self.accountId
-//        formControl.id = self.idPelicula!
-        formControl.id = self.id
+        formControl.id = self.idPelicula!
+//        formControl.id = self.id
         formControl.titulo = self.titulo
         formControl.overview = self.overview
     }

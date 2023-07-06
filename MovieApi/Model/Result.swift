@@ -9,7 +9,7 @@ import Foundation
 
 struct Result {
     
-    var Correct : Bool?
+    var Correct : Bool
     var ErrorMessage : String?
     var Objects : [Any]?
     var Object : Any?

@@ -32,7 +32,7 @@ struct Movie : Codable {
     var id : Int
     var original_title : String
     var overview : String
-    var popularity : Float
+    var popularity : Float?
     var poster_path : String
     var release_date : String
     var title : String

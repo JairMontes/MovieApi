@@ -23,9 +23,9 @@ struct Results1 : Codable {
 
 struct Serie : Codable {
     var id : Int
-    var first_air_date : String
+    var first_air_date : String?
     var name : String
-    var overview : String
+    var overview : String?
     var poster_path : String
     var vote_average : Float
     var toPaint : Bool? = nil
