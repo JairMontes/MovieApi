@@ -78,5 +78,61 @@ class FavoritosDetalleViewModel {
            
            return result
        }
+    
+    func DeleteSerie(_ idSerie : Int) -> Result{
+           var result = Result()
+           
+           do{
+               let context = appDelegate.persistentContainer.viewContext
+               let response = NSFetchRequest<NSFetchRequestResult>(entityName: "FavSeries")
+               response.predicate = NSPredicate(format: "id = %i", idSerie)
+                           
+               let resultFetch = try context.fetch(response) as? [NSManagedObject]
+               let object = resultFetch?.first
+               
+               context.delete(object!)
+               
+               do{
+                   try context.save()
+                   result.Correct = true
+               } catch let error{
+                   print(error.localizedDescription)
+               }
+               
+           } catch let error{
+               result.Correct = false
+               result.ErrorMessage = error.localizedDescription
+              
+           }
+           return result
+       }
+    
+    func DeleteMovie(_ idPelicula : Int) -> Result{
+            var result = Result()
+            
+            do{
+                let context = appDelegate.persistentContainer.viewContext
+                let response = NSFetchRequest<NSFetchRequestResult>(entityName: "FavMovies")
+                response.predicate = NSPredicate(format: "id = %i", idPelicula)
+                            
+                let resultFetch = try context.fetch(response) as? [NSManagedObject]
+                let object = resultFetch?.first
+                
+                context.delete(object!)
+                
+                do{
+                    try context.save()
+                    result.Correct = true
+                } catch let error{
+                    print(error.localizedDescription)
+                }
+                
+            } catch let error{
+                result.Correct = false
+                result.ErrorMessage = error.localizedDescription
+                
+            }
+            return result
+        }
 }
 

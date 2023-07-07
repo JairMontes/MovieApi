@@ -33,6 +33,7 @@ class MoviesController: UIViewController {
     var overview = ""
     var titulo = ""
     var Serie = false
+    var loginviewmodel = LoginViewModel()
     var movieViewModel = MovieViewModel()
     var serieviewmodel = SerieViewModel()
     var favoritosviewmodel = FavoritosViewModel()
@@ -91,12 +92,30 @@ class MoviesController: UIViewController {
         
         let alert = UIAlertController(title: "What do you want do?", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "View Profile", style: .default){_ in self.performSegue(withIdentifier: "SeguePerfil", sender: nil)})
-        alert.addAction(UIAlertAction(title: "Log Out", style: .destructive){_ in self.performSegue(withIdentifier: "SegueLogin", sender: nil)})
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        
-        DispatchQueue.main.async {
+        let logOutAction = UIAlertAction(title: "Log out", style: .destructive) { (action) in
+            
+            self.loginviewmodel.LogOut(resp: {result, error in
+                            if let resultSource = result{
+                                print("LogOut: \(resultSource.success)")
+                                UserDefaults.resetStandardUserDefaults()
+                                DispatchQueue.main.async {
+                                    self.dismiss(animated: true)
+           
+                                }
+                            }
+                            if let errorSource = error{
+                                print("Error LogOut: \(errorSource.status_message)")
+                            }
+                        })
+                    }
+                    
+                    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+                        alert.dismiss(animated: true)
+                    }
+        alert.addAction(logOutAction)
+               alert.addAction(cancelAction)
             self.present(alert, animated: false, completion: nil)
-        }
+        
     }
     
     @objc func seleccion(_ sender : UISegmentedControl){
@@ -112,6 +131,7 @@ class MoviesController: UIViewController {
                         self.moviesTopRated.append(objMovie)
                         print(resultSource)
                     }
+                    
                     DispatchQueue.main.async {
                         self.collectionMovies.reloadData()
                     }
@@ -221,7 +241,6 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
             cell.imagenPelicula.layer.cornerRadius = cell.frame.height/12
 //                        cell.layer.cornerRadius = 25
             
-            
             cell.imagenPelicula.load(url: urlImg)
             cell.imagenPelicula.layer.cornerRadius = cell.frame.height/8
             
@@ -285,7 +304,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         }
         cell.btnFavoritos.tag = indexPath.row
         cell.btnFavoritos.addTarget(self, action: #selector(AddFavoritos(_:)), for: .touchUpInside)
-
+        
         cell.layer.cornerRadius = 25
         
         return cell
@@ -318,7 +337,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
                     if resultAddMovie.Correct{
                         let alert = UIAlertController(title: "Aviso", message: "Película agregada a favoritos", preferredStyle: .alert)
                         let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
-                            self.dismiss(animated: true)
+//                            self.dismiss(animated: true)
                         })
                         
                         alert.addAction(action)
@@ -360,7 +379,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
                     if resultAddMovie.Correct{
                         let alert = UIAlertController(title: "Aviso", message: "Película agregada a favoritos", preferredStyle: .alert)
                         let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
-                            self.dismiss(animated: true)
+//                            self.dismiss(animated: true)
                         })
                         
                         alert.addAction(action)
@@ -401,7 +420,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
                         if resultAddSerie.Correct{
                             let alert = UIAlertController(title: "Aviso", message: "Serie agregada a favoritos", preferredStyle: .alert)
                             let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
-                                self.dismiss(animated: true)
+//                                self.dismiss(animated: true)
                             })
                             
                             alert.addAction(action)
@@ -411,7 +430,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
                         else{
                             let alert = UIAlertController(title: "Aviso", message: "Error al agregar serie a favoritos", preferredStyle: .alert)
                             let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
-                                self.dismiss(animated: true)
+//                                self.dismiss(animated: true)
                             })
                             
                             alert.addAction(action)
@@ -441,7 +460,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
                     if resultAddSerie.Correct{
                         let alert = UIAlertController(title: "Aviso", message: "Serie agregada a favoritos", preferredStyle: .alert)
                         let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
-                            self.dismiss(animated: true)
+//                            self.dismiss(animated: true)
                         })
                         
                         alert.addAction(action)
@@ -524,6 +543,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         
         
         self.performSegue(withIdentifier: "SegueDetalle", sender: self)
+//        self.performSegue(withIdentifier: "SeguePerfil", sender: self)
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "SegueDetalle"{
@@ -546,8 +566,17 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
         formControl.titulo = self.titulo
         formControl.overview = self.overview
     }
+//        if segue.identifier == "SeguePerfil"{
+//        let formControl = segue.destination as! PerfilController
+//        formControl.isSerie = self.Serie
+//
+//        formControl.idSerie = self.idSerie!
+//        print(idSerie)
+//        formControl.accountId = self.accountId
+//    }
+   
     }
-}
+    }
     
     
    

@@ -22,7 +22,7 @@ class DetalleController: UIViewController {
     var dataImgMovies : [Companie] = []
     var idCompania : Int? = 0
     var id = 0
-    var idPelicula : Int = 0
+    var idPelicula : Int? = 0
     var idSerie : Int? = 0
     var isSerie = false
     var nombre : String = ""
@@ -36,15 +36,17 @@ class DetalleController: UIViewController {
     var overview = ""
     var titulo = ""
     let urlDefecto = "https://image.tmdb.org/t/p/w500/"
+    var isPressed = false
     var movieViewModel = MovieViewModel()
     var favoritosviewmodel = FavoritosViewModel()
-    var favoritesDetalleViewModel = FavoritosDetalleViewModel()
+    var favoritosdetalleviewmodel = FavoritosDetalleViewModel()
     var seriesviewmodel = SerieViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         collectionCompanies.backgroundColor = .black
+        
         
         print(isSerie)
         lblNombre.text = String(nombre)
@@ -66,6 +68,10 @@ class DetalleController: UIViewController {
     
     @IBAction func btnFavoritos(_ sender: Any) {
         
+        isPressed.toggle()
+               
+               if isPressed{
+//                   btnFavoritosOutlet.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         if isSerie{
 
             favoritosviewmodel.AddFavorito(favorite: true, accountId: self.accountId, mediaId: self.idSerie!, mediaType: "tv", resp: {result, error in
@@ -84,7 +90,7 @@ class DetalleController: UIViewController {
                        serie.name = self.titulo
                        serie.poster_path = self.poster_path
                        serie.vote_average = self.vote_average
-                       let resultAddSerie = favoritesDetalleViewModel.AddSerie(serie)
+                       let resultAddSerie = favoritosdetalleviewmodel.AddSerie(serie)
             if resultAddSerie.Correct{
                            print("Serie agregada a CoreData")
                        }
@@ -105,13 +111,13 @@ class DetalleController: UIViewController {
                         })
                         
                         var movie = Movie()
-                        movie.id = self.idPelicula
+                       movie.id = self.idPelicula!
                         movie.overview = self.overview
                         movie.release_date = self.release_date
                         movie.title = self.titulo
                         movie.poster_path = self.poster_path
                         movie.vote_average = self.vote_average
-                        let resultAddMovie = favoritesDetalleViewModel.AddMovie(movie)
+                        let resultAddMovie = favoritosdetalleviewmodel.AddMovie(movie)
         if resultAddMovie.Correct{
                             print("Pelicula agregada a CoreData")
                         }
@@ -120,7 +126,91 @@ class DetalleController: UIViewController {
                         }
                     }
     }
+    else{
+
+       
+       if isSerie{
+           favoritosviewmodel.AddFavorito(favorite: false, accountId: self.accountId, mediaId: self.idSerie!, mediaType: "tv", resp: {result, error in
+                           if let resultSource = result{
+                               print("Serie eliminada de favoritos correctamente: \(resultSource.status_message)")
+                           }
+                           if let errorSource = error{
+                               print("Error al eliminar serie de favoritos: \(errorSource.status_message)")
+                           }
+                       })
+                       
+           let resultSerie = favoritosdetalleviewmodel.DeleteSerie(self.idSerie!)
+                       if resultSerie.Correct{
+                           print("Serie eliminada de CoreData")
+                       }
+                       else{
+                           print("Error al eliminar serie de CoreData: \(resultSerie.ErrorMessage)")
+                       }
+                   }
+                   else{
+                       favoritosviewmodel.AddFavorito(favorite: false, accountId: self.accountId, mediaId: self.id, mediaType: "movie", resp: {result, error in
+                           if let resultSource = result{
+                                                              
+                               print("Pelicula eliminada de favoritos correctamente: \(resultSource.status_message)")
+                           }
+                           if let errorSource = error{
+                               print("Error al eliminar pelicula de favoritos: \(errorSource.status_message)")
+                           }
+                       })
+                       
+                       let resultPelicula = favoritosdetalleviewmodel.DeleteMovie(self.id)
+                       if resultPelicula.Correct{
+                           print("Pelicula eliminada de CoreData")
+                       }
+                       else{
+                           print("Error al eliminar pelicula de CoreData: \(resultPelicula.ErrorMessage)")
+                       }
+                   }
+                   
+               }
+    }
+
     
+    
+    @IBAction func btnEliminar(_ sender: Any) {
+        if isSerie{
+            favoritosviewmodel.AddFavorito(favorite: false, accountId: self.accountId, mediaId: self.idSerie!, mediaType: "tv", resp: {result, error in
+                            if let resultSource = result{
+                                print("Serie eliminada de favoritos correctamente: \(resultSource.status_message)")
+                            }
+                            if let errorSource = error{
+                                print("Error al eliminar serie de favoritos: \(errorSource.status_message)")
+                            }
+                        })
+                        
+            let resultSerie = favoritosdetalleviewmodel.DeleteSerie(self.idSerie!)
+                        if resultSerie.Correct{
+                            print("Serie eliminada de CoreData")
+                        }
+                        else{
+                            print("Error al eliminar serie de CoreData: \(resultSerie.ErrorMessage)")
+                        }
+                    }
+                    else{
+                        favoritosviewmodel.AddFavorito(favorite: false, accountId: self.accountId, mediaId: self.idPelicula!, mediaType: "movie", resp: {result, error in
+                            if let resultSource = result{
+                                print("Pelicula eliminada de favoritos correctamente: \(resultSource.status_message)")
+                            }
+                            if let errorSource = error{
+                                print("Error al eliminar pelicula de favoritos: \(errorSource.status_message)")
+                            }
+                        })
+                        
+                        let resultPelicula = favoritosdetalleviewmodel.DeleteMovie(self.idPelicula!)
+                        if resultPelicula.Correct{
+                            print("Pelicula eliminada de CoreData")
+                        }
+                        else{
+                            print("Error al eliminar pelicula de CoreData: \(resultPelicula.ErrorMessage)")
+                        }
+                    }
+                    
+                }
     
     
     func updateUI(){
@@ -139,7 +229,7 @@ class DetalleController: UIViewController {
                             }
                         })
                     }else{
-            movieViewModel.GetDetail(idPelicula, resp:  { result, error in
+                        movieViewModel.GetDetail(idPelicula!, resp:  { result, error in
                 if let resultSource = result{
                     for objCompany in resultSource.production_companies{
                         let _ = objCompany as Companie
@@ -175,19 +265,20 @@ extension DetalleController : UICollectionViewDelegate, UICollectionViewDataSour
         if companie[indexPath.row].logo_path == nil{
                         cell.imageCompanie.image = UIImage(named: "sinImagen")
                         cell.lblNombre.text = companie[indexPath.row].name
-//                        cell.lblSede.text = companie[indexPath.row].headquarters
+            cell.imageCompanie.layer.cornerRadius = cell.frame.height/12
                         
                     }
                     else{
                         let imagen = companie[indexPath.row].logo_path!
                         cell.lblNombre.text = companie[indexPath.row].name
-//                        cell.lblSede.text = companie[indexPath.row].headquarters
+                        cell.imageCompanie.layer.cornerRadius = cell.frame.height/12
                         
                         let urlImgProductoras = URL(string: "https://image.tmdb.org/t/p/w500/\(imagen)")!
                         print(urlImgProductoras)
+                        cell.imageCompanie.layer.cornerRadius = cell.frame.height/12
                         cell.imageCompanie.load(url: urlImgProductoras)
                     }
-        
+//        self.imageView.layer.cornerRadius = 12
         return cell
     }
     

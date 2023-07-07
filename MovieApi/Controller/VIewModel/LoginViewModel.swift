@@ -162,6 +162,53 @@ class LoginViewModel{
         
     }
     
+    func LogOut(resp: @escaping(Session?, Error?)->Void){
+            
+            let defaults = UserDefaults.standard
+            let sessionId = defaults.string(forKey: "session_id")!
+   
+            let headers = [
+                "accept": "application/json",
+                "content-type": "application/json",
+            ]
+
+            let parameters = [
+                "session_id": "\(sessionId)"
+            ] as [String : Any]
+            
+            let url = URL(string: "https://api.themoviedb.org/3/authentication/session?api_key=\(API_KEY)")!
+            let postData = try? JSONSerialization.data(withJSONObject: parameters, options: [])
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "DELETE"
+            request.allHTTPHeaderFields = headers
+            request.httpBody = postData as? Data
+            
+            URLSession.shared.dataTask(with: request){ data, response, error in
+                let httpResponse = response as! HTTPURLResponse
+                if 200...299 ~= httpResponse.statusCode{
+                    if let dataSource = data{
+                        let decoder = JSONDecoder()
+                        let result = try! decoder.decode(Session.self, from: dataSource)
+                        let jsonString = String(data: dataSource, encoding: String.Encoding.utf8)
+   
+                        resp(result, nil)
+                    }
+                }
+                
+                if 400...499 ~= httpResponse.statusCode{
+                    if let dataSource = data{
+                        let decoder = JSONDecoder()
+                        let error = try! decoder.decode(Error.self, from: dataSource)
+                        let jsonString = String(data: dataSource, encoding: String.Encoding.utf8)
+
+                        resp(nil, error)
+                    }
+                }
+                
+            }.resume()
+
+        }
     
    
 }

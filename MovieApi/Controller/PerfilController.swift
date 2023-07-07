@@ -16,9 +16,11 @@ class PerfilController: UIViewController {
     
     var favoritosviewmodel = FavoritosViewModel()
     var accountviewmodel = AccountViewModel()
+    var favoritosdetalleviewmodel = FavoritosDetalleViewModel()
     
     var dataFavoriteMovies : [Movie] = []
     var idAccount = 0
+    
     
     
     
@@ -120,17 +122,24 @@ extension PerfilController: UICollectionViewDelegate, UICollectionViewDataSource
         cell.lblFecha.text = dataFavoriteMovies[indexPath.row].release_date
         cell.lblPuntuacion.text = String(dataFavoriteMovies[indexPath.row].vote_average)
         if dataFavoriteMovies[indexPath.row].overview == ""{
-        cell.lblDescripcion.text = "No hay descripción :("
+            cell.lblDescripcion.text = "No hay descripción :("
         }else{
-        cell.lblDescripcion.text = dataFavoriteMovies[indexPath.row].overview
+            cell.lblDescripcion.text = dataFavoriteMovies[indexPath.row].overview
         }
         cell.btnFavoritos.isHidden = true
+        
         cell.layer.cornerRadius = 25
         return cell
         
         
     }
 }
+    
+    
+   
+        
+    
+
 
 
 
