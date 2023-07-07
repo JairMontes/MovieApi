@@ -34,40 +34,70 @@ class LoginController: UIViewController {
     }()
 
     
-    var txtUsuario: UITextField = {
-           let txtusuario = UITextField()
+//    var txtUsuario: UITextField = {
+//           let txtusuario = UITextField()
+//
+////           txtusuario.layer.cornerRadius = 10
+//           txtusuario.backgroundColor = UIColor.white
+//           txtusuario.layer.borderWidth = 1
+//           txtusuario.placeholder = "Username"
+//           txtusuario.text = "JairMontes"
+//
+//           txtusuario.translatesAutoresizingMaskIntoConstraints = false
+//           return txtusuario
+//      }()
 
-//           txtusuario.layer.cornerRadius = 10
-           txtusuario.backgroundColor = UIColor.white
-           txtusuario.layer.borderWidth = 1
-           txtusuario.placeholder = "Username"
-           txtusuario.text = "JairMontes"
-
-           txtusuario.translatesAutoresizingMaskIntoConstraints = false
-           return txtusuario
-      }()
-
+    private let txtUsuario: UITextField = {
+            let textField = UITextField()
+            textField.placeholder = "Username"
+            textField.text = "JairMontes"
+//            textField.textColor = .lightGray
+            textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height:textField.frame.height))
+            textField.leftViewMode = .always
+            textField.textAlignment = .left
+            textField.font = UIFont(name: "Arial Rounded MT Bold", size: 18)
+            textField.layer.cornerRadius = CGFloat(floatLiteral: 5)
+            textField.backgroundColor = .init(red: 200, green: 202, blue: 206, alpha: 0.5)
+            textField.translatesAutoresizingMaskIntoConstraints = false
+            return textField
+        }()
     
-    var txtPassword: UITextField = {
-        
-           let txtfield = UITextField(frame: CGRect(x: 70, y: 540, width: 250, height: 50))
-
-//        txtfield.layer.cornerRadius = 10
-        txtfield.backgroundColor = UIColor.white
-        txtfield.layer.borderWidth = 1
-        txtfield.placeholder = "Password"
-        txtfield.text = "12345"
-      
-
-           txtfield.translatesAutoresizingMaskIntoConstraints = false
-           return txtfield
-      }()
+//    var txtPassword: UITextField = {
+//
+//           let txtfield = UITextField(frame: CGRect(x: 70, y: 540, width: 250, height: 50))
+//
+////        txtfield.layer.cornerRadius = 10
+//        txtfield.backgroundColor = UIColor.white
+//        txtfield.layer.borderWidth = 1
+//        txtfield.placeholder = "Password"
+//        txtfield.text = "12345"
+//
+//
+//           txtfield.translatesAutoresizingMaskIntoConstraints = false
+//           return txtfield
+//      }()
+    
+    private let txtPassword: UITextField = {
+            let textField = UITextField()
+            textField.placeholder = "Password"
+            textField.text = "12345"
+//            textField.textColor = .lightGray
+            textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height:textField.frame.height))
+            textField.leftViewMode = .always
+            textField.textAlignment = .left
+            textField.font = UIFont(name: "Arial Rounded MT", size: 18)
+            textField.layer.cornerRadius = CGFloat(floatLiteral: 5)
+            textField.backgroundColor = .init(red: 200, green: 202, blue: 206, alpha: 0.5)
+            textField.translatesAutoresizingMaskIntoConstraints = false
+            return textField
+        }()
     
     var lblError : UILabel = {
             let label = UILabel(frame: CGRect(x: 10, y: 600, width: 550, height: 30))
-            label.textColor = .red
+        label.textColor = .orange
             label.text  = "Error"
             label.textAlignment = .center
+        label.font = UIFont(name: "Arial", size: 13)
             return label
         }()
 
@@ -185,22 +215,28 @@ class LoginController: UIViewController {
             
 //            Fondo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 //            Fondo.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-
+          
             Image.leftAnchor.constraint(equalTo: view.leftAnchor),
             Image.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 
             txtUsuario.bottomAnchor.constraint(equalTo: Image.bottomAnchor, constant: 45),
-            txtUsuario.leftAnchor.constraint(equalTo: view.leftAnchor),
+            txtUsuario.leftAnchor.constraint(equalTo: view.leftAnchor, constant:  65),
             txtUsuario.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             txtPassword.bottomAnchor.constraint(equalTo: txtUsuario.bottomAnchor, constant: 45),
-            txtPassword.leftAnchor.constraint(equalTo: view.leftAnchor),
+            txtPassword.leftAnchor.constraint(equalTo: view.leftAnchor, constant:  65),
             txtPassword.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            btnIngresar.bottomAnchor.constraint(equalTo: txtPassword.bottomAnchor, constant: 80),
+            btnIngresar.bottomAnchor.constraint(equalTo: txtPassword.bottomAnchor, constant: 71),
             btnIngresar.leftAnchor.constraint(equalTo: view.leftAnchor),
             btnIngresar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            lblError.bottomAnchor.constraint(equalTo: btnIngresar.bottomAnchor, constant: 80),
-            lblError.leftAnchor.constraint(equalTo: view.leftAnchor),
-            lblError.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            lblError.bottomAnchor.constraint(equalTo: btnIngresar.bottomAnchor, constant: 45),
+//           lblError.leftAnchor.constraint(equalTo: view.leftAnchor, constant:  65),
+//            lblError.rightAnchor.constraint(equalTo: view.rightAnchor, constant:  100),
+//            lblError.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            lblError.bottomAnchor.constraint(equalTo: btnIngresar.bottomAnchor, constant: 50),
+//            lblError.leftAnchor.constraint(equalTo: view.leftAnchor, constant:  10),
+////            lblError.rightAnchor.constraint(equalTo: view.rightAnchor, constant:  20),
+//            lblError.leftAnchor.constraint(equalTo: view.leftAnchor),
+//            lblError.centerXAnchor.constraint(equalTo: view.centerXAnchor),
 
                             
         ])

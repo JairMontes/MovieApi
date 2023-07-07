@@ -14,8 +14,9 @@ class movieCell: UICollectionViewCell {
     @IBOutlet weak var lblNombre: UILabel!
     @IBOutlet weak var lblFecha: UILabel!
     @IBOutlet weak var lblPuntuacion: UILabel!
-    @IBOutlet weak var lblDescripcion: UILabel!
     @IBOutlet weak var btnFavoritos: UIButton!
+    @IBOutlet weak var lblDescripcion: UILabel!
+    
     
     
     override func awakeFromNib() {

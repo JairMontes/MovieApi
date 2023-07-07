@@ -36,10 +36,15 @@ class MoviesController: UIViewController {
     var movieViewModel = MovieViewModel()
     var serieviewmodel = SerieViewModel()
     var favoritosviewmodel = FavoritosViewModel()
+    var favoritosdetalleviewmodel = FavoritosDetalleViewModel()
     var acccountviewmodel = AccountViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+                Segmento.setTitleTextAttributes(titleTextAttributes, for: .normal)
+        view.backgroundColor = .black
+        collectionMovies.backgroundColor = .black
         
         collectionMovies.register(UINib(nibName: "movieCell", bundle: .main), forCellWithReuseIdentifier: "movieCell")
         collectionMovies.delegate = self
@@ -150,8 +155,21 @@ class MoviesController: UIViewController {
 
 
 extension UIImageView {
+//    func load(url: URL) {
+//        DispatchQueue.global().async { [weak self] in
+//            if let data = try? Data(contentsOf: url) {
+//                if let image = UIImage(data: data) {
+//                    DispatchQueue.main.async {
+//                        self?.image = image
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+
     func load(url: URL) {
-        DispatchQueue.global().async { [weak self] in
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.50) {[weak self] in
             if let data = try? Data(contentsOf: url) {
                 if let image = UIImage(data: data) {
                     DispatchQueue.main.async {
@@ -161,8 +179,8 @@ extension UIImageView {
             }
         }
     }
+    
 }
-
 extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource{
     
     
@@ -191,7 +209,7 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "movieCell", for: indexPath) as! movieCell
         
-      
+        cell.layer.cornerRadius = 25
         
         if Segmento.selectedSegmentIndex == 0{
             let urlImg = URL(string: "https://image.tmdb.org/t/p/w500/\(movies[indexPath.row].poster_path)")!
@@ -200,6 +218,8 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
             cell.lblDescripcion.text = movies[indexPath.row].overview
             cell.lblFecha.text = movies[indexPath.row].release_date
             cell.lblPuntuacion.text = movies[indexPath.row].vote_average.description
+            cell.imagenPelicula.layer.cornerRadius = cell.frame.height/12
+//                        cell.layer.cornerRadius = 25
             
             
             cell.imagenPelicula.load(url: urlImg)
@@ -217,36 +237,56 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
             cell.imagenPelicula.load(url: urlImg)
             cell.imagenPelicula.layer.cornerRadius = cell.frame.height/7
             
+            cell.imagenPelicula.layer.cornerRadius = cell.frame.height/12
+//                        cell.layer.cornerRadius = 25
+            
         }
         
         if Segmento.selectedSegmentIndex == 2{
             let urlImg = URL(string: "https://image.tmdb.org/t/p/w500/\(onTv[indexPath.row].poster_path)")!
             cell.lblNombre.text = onTv[indexPath.row].original_name
+            
+            if onTv[indexPath.row].overview == ""{
+            cell.lblDescripcion.text = "No hay descripción :("
+          
+            }else{
             cell.lblDescripcion.text = onTv[indexPath.row].overview
+            }
+            
             cell.lblFecha.text = onTv[indexPath.row].first_air_date
             cell.lblPuntuacion.text = onTv[indexPath.row].vote_average.description
             
             cell.imagenPelicula.load(url: urlImg)
             cell.imagenPelicula.layer.cornerRadius = cell.frame.height/7
             
+            cell.imagenPelicula.layer.cornerRadius = cell.frame.height/12
+//                        cell.layer.cornerRadius = 25
+            
         }
         
         if Segmento.selectedSegmentIndex == 3{
             let urlImg = URL(string: "https://image.tmdb.org/t/p/w500/\(airingToday[indexPath.row].poster_path)")!
             cell.lblNombre.text = airingToday[indexPath.row].original_name
-            cell.lblDescripcion.text = "No hay descripción"
+            if airingToday[indexPath.row].overview == ""{
+            cell.lblDescripcion.text = "No hay descripción :("
+          
+            }else{
             cell.lblDescripcion.text = airingToday[indexPath.row].overview
+            }
             cell.lblFecha.text = airingToday[indexPath.row].first_air_date
             cell.lblPuntuacion.text = airingToday[indexPath.row].vote_average.description
             
             cell.imagenPelicula.load(url: urlImg)
-            cell.imagenPelicula.layer.cornerRadius = cell.frame.height/7
             
-            
+            cell.imagenPelicula.layer.cornerRadius = cell.frame.height/12
+//                        cell.layer.cornerRadius = 25
+
             
         }
-//        cell.btnFavoritos.tag = indexPath.row
-//        cell.btnFavoritos.addTarget(self, action: #selector(AddFavoritos(_:)), for: .touchUpInside)
+        cell.btnFavoritos.tag = indexPath.row
+        cell.btnFavoritos.addTarget(self, action: #selector(AddFavoritos(_:)), for: .touchUpInside)
+
+        cell.layer.cornerRadius = 25
         
         return cell
     }
@@ -254,21 +294,169 @@ extension MoviesController: UICollectionViewDelegate, UICollectionViewDataSource
     @objc func AddFavoritos(_ sender: UIButton){
         print("Me estas presionando")
         var idMedia = 0
-                
+
                 if Segmento.selectedSegmentIndex == 0{
-                    idMedia = movies[sender.tag].id
+                  idMedia = movies[sender.tag].id
+                    
+                    favoritosviewmodel.AddFavorito(favorite: true, accountId: self.accountId, mediaId: idMedia, mediaType: "movie", resp: {result, error in
+                                        if let resultSource = result{
+                                            print("Pelicula agregada a favoritos correctamente: \(resultSource.status_message)")
+                                        }
+                                        if let errorSource = error{
+                                            print("Error al agregar pelicula a favoritos: \(errorSource.status_message)")
+                                        }
+                                    })
+                                    
+                                    var movie = Movie()
+                    movie.id = self.idPelicula!
+                                    movie.overview = self.overview
+                                    movie.release_date = self.release_date
+                                    movie.title = self.titulo
+                                    movie.poster_path = self.poster_path
+                                    movie.vote_average = self.vote_average
+                                    let resultAddMovie = favoritosdetalleviewmodel.AddMovie(movie)
+                    if resultAddMovie.Correct{
+                        let alert = UIAlertController(title: "Aviso", message: "Película agregada a favoritos", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                            self.dismiss(animated: true)
+                        })
+                        
+                        alert.addAction(action)
+                        self.present(alert, animated: true)
+                        print("Pelicula agregada a CoreData")
+                    }
+                    else{
+                        let alert = UIAlertController(title: "Aviso", message: "Error al agregar película a favoritos", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                            self.dismiss(animated: true)
+                        })
+                        
+                        alert.addAction(action)
+                        self.present(alert, animated: true)
+                        print("Error al agregar pelicula a CoreData \(resultAddMovie.ErrorMessage)")                    }
                 }
-                
+            
+
                 if Segmento.selectedSegmentIndex == 1{
                     idMedia = moviesTopRated[sender.tag].id
+                    
+                    favoritosviewmodel.AddFavorito(favorite: true, accountId: self.accountId, mediaId: idMedia, mediaType: "movie", resp: {result, error in
+                                        if let resultSource = result{
+                                            print("Pelicula agregada a favoritos correctamente: \(resultSource.status_message)")
+                                        }
+                                        if let errorSource = error{
+                                            print("Error al agregar pelicula a favoritos: \(errorSource.status_message)")
+                                        }
+                                    })
+
+                                    var movie = Movie()
+                    movie.id = self.idPelicula!
+                                    movie.overview = self.overview
+                                    movie.release_date = self.release_date
+                                    movie.title = self.titulo
+                                    movie.poster_path = self.poster_path
+                                    movie.vote_average = self.vote_average
+                                    let resultAddMovie = favoritosdetalleviewmodel.AddMovie(movie)
+                    if resultAddMovie.Correct{
+                        let alert = UIAlertController(title: "Aviso", message: "Película agregada a favoritos", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                            self.dismiss(animated: true)
+                        })
+                        
+                        alert.addAction(action)
+                        self.present(alert, animated: true)
+                        print("Pelicula agregada a CoreData")
+                    }
+                    else{
+                        let alert = UIAlertController(title: "Aviso", message: "Error al agregar película a favoritos", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                            self.dismiss(animated: true)
+                        })
+                        
+                        alert.addAction(action)
+                        self.present(alert, animated: true)
+                        print("Error al agregar pelicula a CoreData \(resultAddMovie.ErrorMessage)")                    }
                 }
-                
-                if Segmento.selectedSegmentIndex == 2{
+
+                    if Segmento.selectedSegmentIndex == 2{
                     idMedia = onTv[sender.tag].id
-                }
-                
+                    
+                        favoritosviewmodel.AddFavorito(favorite: true, accountId: self.accountId, mediaId: idMedia, mediaType: "tv", resp: {result, error in
+                                       if let resultSource = result{
+                                           print("Serie agregada a favoritos correctamente: \(resultSource.status_message)")
+                                       }
+                                       if let errorSource = error{
+                                           print("Error al agregar serie a favoritos: \(errorSource.status_message)")
+                                       }
+                                   })
+
+                        var serie = MovieApi.Serie()
+                        serie.id = self.idSerie!
+                                   serie.overview = self.overview
+                                   serie.first_air_date = self.release_date
+                                   serie.name = self.titulo
+                                   serie.poster_path = self.poster_path
+                                   serie.vote_average = self.vote_average
+                                   let resultAddSerie = favoritosdetalleviewmodel.AddSerie(serie)
+                        if resultAddSerie.Correct{
+                            let alert = UIAlertController(title: "Aviso", message: "Serie agregada a favoritos", preferredStyle: .alert)
+                            let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                                self.dismiss(animated: true)
+                            })
+                            
+                            alert.addAction(action)
+                            self.present(alert, animated: true)
+                            print("Serie agregada a CoreData")
+                        }
+                        else{
+                            let alert = UIAlertController(title: "Aviso", message: "Error al agregar serie a favoritos", preferredStyle: .alert)
+                            let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                                self.dismiss(animated: true)
+                            })
+                            
+                            alert.addAction(action)
+                            self.present(alert, animated: true)
+                            print("Error al agregar a CoreData \(resultAddSerie.ErrorMessage)")                 }
+                    }
                 if Segmento.selectedSegmentIndex == 3{
                     idMedia = airingToday[sender.tag].id
+                    
+                    favoritosviewmodel.AddFavorito(favorite: true, accountId: self.accountId, mediaId: idMedia, mediaType: "tv", resp: {result, error in
+                                   if let resultSource = result{
+                                       print("Serie agregada a favoritos correctamente: \(resultSource.status_message)")
+                                   }
+                                   if let errorSource = error{
+                                       print("Error al agregar serie a favoritos: \(errorSource.status_message)")
+                                   }
+                               })
+
+                    var serie = MovieApi.Serie()
+                    serie.id = self.idSerie!
+                               serie.overview = self.overview
+                               serie.first_air_date = self.release_date
+                               serie.name = self.titulo
+                               serie.poster_path = self.poster_path
+                               serie.vote_average = self.vote_average
+                               let resultAddSerie = favoritosdetalleviewmodel.AddSerie(serie)
+                    if resultAddSerie.Correct{
+                        let alert = UIAlertController(title: "Aviso", message: "Serie agregada a favoritos", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                            self.dismiss(animated: true)
+                        })
+                        
+                        alert.addAction(action)
+                        self.present(alert, animated: true)
+                        print("Serie agregada a CoreData")
+                    }
+                    else{
+                        let alert = UIAlertController(title: "Aviso", message: "Error al agregar serie a favoritos", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                            self.dismiss(animated: true)
+                        })
+                        
+                        alert.addAction(action)
+                        self.present(alert, animated: true)
+                        print("Error al agregar a CoreData \(resultAddSerie.ErrorMessage)")                 }
                 }
     }
     
