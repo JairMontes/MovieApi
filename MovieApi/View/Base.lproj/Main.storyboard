@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="HjB-0b-LV8">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
@@ -121,7 +121,7 @@
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dyh-ta-gRg">
                                 <rect key="frame" x="108" y="307" width="176" height="34"/>
-                                <color key="backgroundColor" systemColor="systemYellowColor"/>
+                                <color key="backgroundColor" red="0.084652861951424657" green="0.83505154639175261" blue="0.23609245137206908" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="3YV-ju-Paf"/>
                                     <constraint firstAttribute="width" constant="176" id="vEc-m3-x2k"/>
@@ -154,15 +154,15 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IyB-YA-WDI">
-                                <rect key="frame" x="108" y="130" width="52" height="57"/>
-                                <color key="backgroundColor" systemColor="systemYellowColor"/>
+                                <rect key="frame" x="306" y="118" width="58" height="57"/>
+                                <color key="backgroundColor" red="0.56828380836870829" green="0.08008822056757256" blue="0.087045800167533355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="52" id="246-Ef-kzO"/>
-                                    <constraint firstAttribute="height" constant="57" id="JQq-MX-R4y"/>
+                                    <constraint firstAttribute="width" constant="58" id="6Qh-bx-cnv"/>
+                                    <constraint firstAttribute="height" constant="57" id="Gkq-EQ-gka"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="trash" catalog="system">
-                                    <color key="baseForegroundColor" red="0.95901960129999997" green="0.087429337199999999" blue="0.14084830879999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="baseForegroundColor" red="0.13949914889691062" green="1" blue="0.12209906072974341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </buttonConfiguration>
                                 <connections>
                                     <action selector="btnEliminar:" destination="l0J-ck-iA6" eventType="touchUpInside" id="3Ea-GG-VKI"/>
@@ -173,26 +173,26 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="tT0-aX-LFV" firstAttribute="top" secondItem="Dyh-ta-gRg" secondAttribute="bottom" constant="8" symbolic="YES" id="3Sz-QZ-WNo"/>
+                            <constraint firstItem="IyB-YA-WDI" firstAttribute="top" secondItem="1QQ-vr-TKI" secondAttribute="bottom" constant="26" id="3bs-la-MDB"/>
                             <constraint firstItem="njF-Xg-fKI" firstAttribute="trailing" secondItem="x0N-hh-WYv" secondAttribute="trailing" id="80D-z2-WMN"/>
                             <constraint firstItem="x0N-hh-WYv" firstAttribute="trailing" secondItem="1QQ-vr-TKI" secondAttribute="trailing" constant="2" id="Bmg-n7-TSH"/>
                             <constraint firstItem="njF-Xg-fKI" firstAttribute="top" secondItem="bGr-cw-z3W" secondAttribute="bottom" constant="199" id="HfH-O0-NWY"/>
                             <constraint firstItem="tT0-aX-LFV" firstAttribute="leading" secondItem="x0N-hh-WYv" secondAttribute="leading" constant="31" id="HvY-Wh-Aof"/>
                             <constraint firstItem="1QQ-vr-TKI" firstAttribute="leading" secondItem="NtV-U2-8U7" secondAttribute="leading" constant="-2" id="Kaf-sj-KTL"/>
                             <constraint firstItem="x0N-hh-WYv" firstAttribute="trailing" secondItem="bGr-cw-z3W" secondAttribute="trailing" constant="95" id="NKT-mv-iLq"/>
-                            <constraint firstItem="IyB-YA-WDI" firstAttribute="leading" secondItem="x0N-hh-WYv" secondAttribute="leading" constant="108" id="W6S-oS-olU"/>
+                            <constraint firstItem="x0N-hh-WYv" firstAttribute="trailing" secondItem="IyB-YA-WDI" secondAttribute="trailing" constant="29" id="V8B-dv-RJG"/>
                             <constraint firstItem="x0N-hh-WYv" firstAttribute="trailing" secondItem="Dyh-ta-gRg" secondAttribute="trailing" constant="109" id="Z00-jh-f6e"/>
                             <constraint firstItem="bGr-cw-z3W" firstAttribute="top" secondItem="1QQ-vr-TKI" secondAttribute="bottom" constant="8" symbolic="YES" id="bQu-nk-efv"/>
                             <constraint firstItem="1QQ-vr-TKI" firstAttribute="top" secondItem="NtV-U2-8U7" secondAttribute="top" constant="22" id="cKB-Xm-y0c"/>
                             <constraint firstItem="tT0-aX-LFV" firstAttribute="top" secondItem="bGr-cw-z3W" secondAttribute="bottom" constant="7" id="cSS-EI-tPC"/>
                             <constraint firstItem="x0N-hh-WYv" firstAttribute="bottom" secondItem="tT0-aX-LFV" secondAttribute="bottom" constant="232" id="dP8-iF-hVz"/>
-                            <constraint firstItem="x0N-hh-WYv" firstAttribute="trailing" secondItem="IyB-YA-WDI" secondAttribute="trailing" constant="233" id="dnL-8v-6Nv"/>
                             <constraint firstItem="bGr-cw-z3W" firstAttribute="leading" secondItem="x0N-hh-WYv" secondAttribute="leading" constant="94" id="k9Y-VM-P4i"/>
+                            <constraint firstItem="IyB-YA-WDI" firstAttribute="leading" secondItem="bGr-cw-z3W" secondAttribute="trailing" constant="8" symbolic="YES" id="m55-9A-Qxc"/>
                             <constraint firstItem="x0N-hh-WYv" firstAttribute="trailing" secondItem="tT0-aX-LFV" secondAttribute="trailing" constant="16" id="oqf-Eo-Nyw"/>
+                            <constraint firstItem="tT0-aX-LFV" firstAttribute="top" secondItem="IyB-YA-WDI" secondAttribute="bottom" constant="174" id="p1a-ih-hmU"/>
                             <constraint firstItem="njF-Xg-fKI" firstAttribute="bottom" secondItem="x0N-hh-WYv" secondAttribute="bottom" id="rJH-ep-aeV"/>
-                            <constraint firstItem="IyB-YA-WDI" firstAttribute="top" secondItem="1QQ-vr-TKI" secondAttribute="bottom" constant="38" id="t19-9U-3qY"/>
                             <constraint firstItem="Dyh-ta-gRg" firstAttribute="leading" secondItem="x0N-hh-WYv" secondAttribute="leading" constant="108" id="tnz-ed-g3S"/>
                             <constraint firstItem="njF-Xg-fKI" firstAttribute="leading" secondItem="x0N-hh-WYv" secondAttribute="leading" constant="2" id="wGW-Vf-gPC"/>
-                            <constraint firstItem="Dyh-ta-gRg" firstAttribute="top" secondItem="IyB-YA-WDI" secondAttribute="bottom" constant="120" id="whA-bg-sfq"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Qd5-Jl-5qX"/>
@@ -446,9 +446,6 @@
         </systemColor>
         <systemColor name="systemPinkColor">
             <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemYellowColor">
-            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

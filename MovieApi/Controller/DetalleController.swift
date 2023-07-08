@@ -36,7 +36,7 @@ class DetalleController: UIViewController {
     var overview = ""
     var titulo = ""
     let urlDefecto = "https://image.tmdb.org/t/p/w500/"
-    var isPressed = false
+    
     var movieViewModel = MovieViewModel()
     var favoritosviewmodel = FavoritosViewModel()
     var favoritosdetalleviewmodel = FavoritosDetalleViewModel()
@@ -68,9 +68,9 @@ class DetalleController: UIViewController {
     
     @IBAction func btnFavoritos(_ sender: Any) {
         
-        isPressed.toggle()
-               
-               if isPressed{
+//        isPressed.toggle()
+//
+//               if isPressed{
 //                   btnFavoritosOutlet.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         if isSerie{
 
@@ -126,49 +126,49 @@ class DetalleController: UIViewController {
                         }
                     }
     }
-    else{
-
-       
-       if isSerie{
-           favoritosviewmodel.AddFavorito(favorite: false, accountId: self.accountId, mediaId: self.idSerie!, mediaType: "tv", resp: {result, error in
-                           if let resultSource = result{
-                               print("Serie eliminada de favoritos correctamente: \(resultSource.status_message)")
-                           }
-                           if let errorSource = error{
-                               print("Error al eliminar serie de favoritos: \(errorSource.status_message)")
-                           }
-                       })
-                       
-           let resultSerie = favoritosdetalleviewmodel.DeleteSerie(self.idSerie!)
-                       if resultSerie.Correct{
-                           print("Serie eliminada de CoreData")
-                       }
-                       else{
-                           print("Error al eliminar serie de CoreData: \(resultSerie.ErrorMessage)")
-                       }
-                   }
-                   else{
-                       favoritosviewmodel.AddFavorito(favorite: false, accountId: self.accountId, mediaId: self.id, mediaType: "movie", resp: {result, error in
-                           if let resultSource = result{
-                                                              
-                               print("Pelicula eliminada de favoritos correctamente: \(resultSource.status_message)")
-                           }
-                           if let errorSource = error{
-                               print("Error al eliminar pelicula de favoritos: \(errorSource.status_message)")
-                           }
-                       })
-                       
-                       let resultPelicula = favoritosdetalleviewmodel.DeleteMovie(self.id)
-                       if resultPelicula.Correct{
-                           print("Pelicula eliminada de CoreData")
-                       }
-                       else{
-                           print("Error al eliminar pelicula de CoreData: \(resultPelicula.ErrorMessage)")
-                       }
-                   }
-                   
-               }
-    }
+//    else{
+//
+//       
+//       if isSerie{
+//           favoritosviewmodel.AddFavorito(favorite: false, accountId: self.accountId, mediaId: self.idSerie!, mediaType: "tv", resp: {result, error in
+//                           if let resultSource = result{
+//                               print("Serie eliminada de favoritos correctamente: \(resultSource.status_message)")
+//                           }
+//                           if let errorSource = error{
+//                               print("Error al eliminar serie de favoritos: \(errorSource.status_message)")
+//                           }
+//                       })
+//                       
+//           let resultSerie = favoritosdetalleviewmodel.DeleteSerie(self.idSerie!)
+//                       if resultSerie.Correct{
+//                           print("Serie eliminada de CoreData")
+//                       }
+//                       else{
+//                           print("Error al eliminar serie de CoreData: \(resultSerie.ErrorMessage)")
+//                       }
+//                   }
+//                   else{
+//                       favoritosviewmodel.AddFavorito(favorite: false, accountId: self.accountId, mediaId: self.id, mediaType: "movie", resp: {result, error in
+//                           if let resultSource = result{
+//                                                              
+//                               print("Pelicula eliminada de favoritos correctamente: \(resultSource.status_message)")
+//                           }
+//                           if let errorSource = error{
+//                               print("Error al eliminar pelicula de favoritos: \(errorSource.status_message)")
+//                           }
+//                       })
+//                       
+//                       let resultPelicula = favoritosdetalleviewmodel.DeleteMovie(self.id)
+//                       if resultPelicula.Correct{
+//                           print("Pelicula eliminada de CoreData")
+//                       }
+//                       else{
+//                           print("Error al eliminar pelicula de CoreData: \(resultPelicula.ErrorMessage)")
+//                       }
+//                   }
+//                   
+//               }
+//    }
 
     
     
